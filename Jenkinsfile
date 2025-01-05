@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage("Cleanup Workspace"){
-                steps {
-                cleanWs()
-                }
-        }
-
         stage('Build & Tag Docker Image') {
             steps {
                 script {
