@@ -5,12 +5,11 @@ pipeline {
         stage('Build & Tag Docker Image') {
             steps {
                 script {
-                    dir('src') {
+                    
 
                     withDockerRegistry(credentialsId: 'dockerhub-cred', toolName: 'docker') {
                         sh "docker build -t nizartheone/checkoutservice:latest ."
                     }
-                        }
                 }
             }
         }
