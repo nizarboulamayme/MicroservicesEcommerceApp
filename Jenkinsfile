@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'Jenkins-Agent' }
 
     stages {
         stage('Build & Tag Docker Image') {
@@ -7,8 +7,8 @@ pipeline {
                 script {
                     dir('src') {
 
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker build -t adijaiswal/cartservice:latest ."
+                    withDockerRegistry(credentialsId: 'dockerhub-cred', toolName: 'docker') {
+                        sh "docker build -t nizartheone/cartservice:latest ."
                     }
                         }
                 }
@@ -18,11 +18,19 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker push adijaiswal/cartservice:latest "
+                    withDockerRegistry(credentialsId: 'dockerhub-cred', toolName: 'docker') {
+                        sh "docker push nizartheone/cartservice:latest "
                     }
                 }
             }
         }
+        
+        stage("Trivy Scan") {
+           		steps {
+               			script {
+	            			sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image nizartheone/cartservice:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table')
+               			}
+           		}
+       		}
     }
 }
