@@ -1,18 +1,16 @@
 pipeline {
-    agent { label 'Jenkins-Agent' }
-    tools {
-		jdk 'Java17'
-		maven 'Maven3'
-	}
+    agent {label 'Jenkins-Agent'}
 
     stages {
-
         stage('Build & Tag Docker Image') {
             steps {
                 script {
+                    dir('src') {
+
                     withDockerRegistry(credentialsId: 'dockerhub-cred', toolName: 'docker') {
                         sh "docker build -t nizartheone/cartservice:latest ."
                     }
+                        }
                 }
             }
         }
@@ -26,7 +24,5 @@ pipeline {
                 }
             }
         }
-
-
     }
 }
