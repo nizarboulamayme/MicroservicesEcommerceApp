@@ -1,12 +1,12 @@
 pipeline {
-    agent any
+    agent { label 'Jenkins-Agent' }
 
     stages {
         stage('Build & Tag Docker Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker build -t adijaiswal/emailservice:latest ."
+                    withDockerRegistry(credentialsId: 'dockerhub-cred', toolName: 'docker') {
+                        sh "docker build -t nizartheone/emailservice:latest ."
                     }
                 }
             }
@@ -15,8 +15,8 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker push adijaiswal/emailservice:latest "
+                    withDockerRegistry(credentialsId: 'dockerhub-cred', toolName: 'docker') {
+                        sh "docker push nizartheone/emailservice:latest "
                     }
                 }
             }
