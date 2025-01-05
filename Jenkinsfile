@@ -1,13 +1,16 @@
 pipeline {
-    agent any
+    agent { label 'Jenkins-Agent' }
 
     stages {
         stage('Build & Tag Docker Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker build -t adijaiswal/checkoutservice:latest ."
+                    dir('src') {
+
+                    withDockerRegistry(credentialsId: 'dockerhub-cred', toolName: 'docker') {
+                        sh "docker build -t nizartheone/checkoutservice:latest ."
                     }
+                        }
                 }
             }
         }
@@ -15,11 +18,12 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker push adijaiswal/checkoutservice:latest "
+                    withDockerRegistry(credentialsId: 'dockerhub-cred', toolName: 'docker') {
+                        sh "docker push nizartheone/checkoutservice:latest "
                     }
                 }
             }
         }
+        
     }
 }
